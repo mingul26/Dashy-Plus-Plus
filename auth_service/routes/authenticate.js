@@ -62,7 +62,6 @@ const loginHandler = function (req, res, next) {
             });
         }
         req.session.name = user.name;
-        req.session.id = user.id;
 
         delete user.password;
         res.status(200).json({
@@ -122,8 +121,7 @@ const currentUserHandler = function (req, res, next) {
         success: true,
         message: 'Current user',
         user: {
-            name: req.session.name,
-            id: req.session.id
+            name: req.session.name
         }
     });
 };
