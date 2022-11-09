@@ -49,15 +49,27 @@ const loginHandler = function (req, res, next) {
     let password = req.body.password;
 
     if (!(email && password)) {
-        res.status(401).send('Email and password are required');
+        res.status(401).json({
+            success: false,
+            message: 'Both email and password are required'
+        });
     }
     findUserByEmailAndPassword(email, password).then(async (user) => {
         if (!user) {
-            return res.status(401).send('Invalid credentials');
+            return res.status(401).json({
+                success: false,
+                message: 'Invalid credentials'
+            });
         }
         req.session.name = user.name;
         req.session.id = user.id;
-        res.status(200).send('Login successful!\nWelcome ' + user.name);
+
+        delete user.password;
+        res.status(200).json({
+            success: true,
+            message: 'Login successful',
+            user: user
+        });
     });
 };
 
@@ -65,7 +77,10 @@ const logoutHandler = function (req, res, next) {
     req.session.destroy();
     res.status(200).clearCookie('connect.sid', {
         path: '/'
-    }).send('Logout successful');
+    }).json({
+        success: true,
+        message: 'Logout successful'
+    });
 };
 
 const signUpHandler = function (req, res, next) {
@@ -74,24 +89,43 @@ const signUpHandler = function (req, res, next) {
     let name = req.body.name;
 
     if (!(email && password && name)) {
-        return res.status(400).send('All input is required');
+        return res.status(400).json({
+            success: false,
+            message: 'All fields are required'
+        });
     }
 
     findUserByEmail(email).then(async (user) => {
         if (user) {
-            return res.status(400).send('User already exists');
+            return res.status(400).json({
+                success: false,
+                message: 'User already exists'
+            });
         }
         registerUser(email, password, name).then((result) => {
-            return res.status(201).send('User registered successfully\nLogin to continue');
+            return res.status(201).json({
+                success: true,
+                message: 'User created successfully'
+            });
         });
     });
 }
 
 const currentUserHandler = function (req, res, next) {
     if (!req.session.name) {
-        return res.status(401).send('Unauthorized');
+        return res.status(401).json({
+            success: false,
+            message: 'Unauthorized'
+        });
     }
-    res.status(200).send('Welcome ' + req.session.name);
+    res.status(200).json({
+        success: true,
+        message: 'Current user',
+        user: {
+            name: req.session.name,
+            id: req.session.id
+        }
+    });
 };
 
 router.post('/login', loginHandler);
