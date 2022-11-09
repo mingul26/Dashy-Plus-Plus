@@ -61,7 +61,7 @@ const loginHandler = function (req, res, next) {
                 message: 'Invalid credentials'
             });
         }
-        req.session.name = user.name;
+        req.session.userId = user.id;
 
         delete user.password;
         res.status(200).json({
@@ -111,7 +111,7 @@ const signUpHandler = function (req, res, next) {
 }
 
 const currentUserHandler = function (req, res, next) {
-    if (!req.session.name) {
+    if (!req.session.userId) {
         return res.status(401).json({
             success: false,
             message: 'Unauthorized'
@@ -121,7 +121,7 @@ const currentUserHandler = function (req, res, next) {
         success: true,
         message: 'Current user',
         user: {
-            name: req.session.name
+            id: req.session.userId
         }
     });
 };
