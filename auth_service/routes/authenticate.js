@@ -35,6 +35,16 @@ async function findUserByEmail(email) {
     }
 }
 
+async function findUserById(userId) {
+    const query = 'SELECT * FROM users WHERE id = $1';
+    try {
+        const result = await pool.query(query, [userId]);
+        return result.rows[0];
+    } catch (error) {
+        throw error;
+    }
+}
+
 async function registerUser(email, password, name) {
     const query = 'INSERT INTO users (email, password, name) VALUES ($1, $2, $3)';
     try {
@@ -117,12 +127,13 @@ const currentUserHandler = function (req, res, next) {
             message: 'Unauthorized'
         });
     }
-    res.status(200).json({
-        success: true,
-        message: 'Current user',
-        user: {
-            id: req.session.userId
-        }
+    findUserById(req.session.userId).then((user) => {
+        delete user.password;
+        res.status(200).json({
+            success: true,
+            message: 'Current user',
+            user: user
+        });
     });
 };
 
