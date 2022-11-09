@@ -1,0 +1,28 @@
+{
+  "name": "auth_service",
+  "version": "0.0.0",
+  "private": true,
+  "main": "bin/www",
+  "scripts": {
+    "dev": "npm run dev:run",
+    "dev:watch": "npm run dev:run",
+    "dev:run": "npx nodemon bin/www",
+    "start": "node bin/www"
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "db-migrate": "^0.11.13",
+    "db-migrate-pg": "^1.2.2",
+    "debug": "~2.6.9",
+    "dotenv": "^16.0.3",
+    "express": "~4.16.1",
+    "express-session": "^1.17.3",
+    "http-errors": "~1.6.3",
+    "morgan": "~1.9.1",
+    "pg": "^8.8.0",
+    "pug": "2.0.0-beta11"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}

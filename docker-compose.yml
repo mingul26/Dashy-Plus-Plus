@@ -1,0 +1,29 @@
+version: '3'
+services:
+  authDB:
+    image: postgres
+    container_name: authDB
+    restart: unless-stopped
+    environment:
+      POSTGRES_ROOT_USER: root
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - '5432:5432'
+  auth_server:
+    build: auth_service
+    container_name: authServer
+    command: npm run dev:watch
+    ports:
+      - 3000:3000
+    volumes:
+      - ./auth_service:/src/
+      - nodemodules:/src/node_modules
+    links:
+      - authDB
+    depends_on:
+      - authDB
+
+volumes:
+  nodemodules: {}
