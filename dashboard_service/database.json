@@ -1,0 +1,10 @@
+{
+  "dev": {
+    "driver": "pg",
+    "user": "postgres",
+    "password": "postgres",
+    "host": "dashboardDB",
+    "port": 5432,
+    "database": "dashboard"
+  }
+}

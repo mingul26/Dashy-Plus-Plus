@@ -1,0 +1,31 @@
+{
+  "name": "dashboard-service",
+  "version": "0.0.0",
+  "private": true,
+  "main": "bin/www.js",
+  "scripts": {
+    "db:init": "npx db-migrate up",
+    "dev": "npm run dev:run",
+    "dev:watch": "npm run db:init && npm run dev:run",
+    "dev:run": "npx nodemon -L",
+    "start": "node"
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "db-migrate": "^0.11.13",
+    "db-migrate-pg": "^1.2.2",
+    "debug": "~2.6.9",
+    "dotenv": "^16.0.3",
+    "express": "~4.16.1",
+    "express-session": "^1.17.3",
+    "http-errors": "~1.6.3",
+    "jsonwebtoken": "^8.5.1",
+    "morgan": "~1.9.1",
+    "pg": "^8.8.0",
+    "pug": "2.0.0-beta11",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
