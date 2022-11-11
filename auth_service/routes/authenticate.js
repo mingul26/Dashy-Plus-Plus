@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const dotenv = require('dotenv').config();
+const jwt = require('jsonwebtoken');
 const Pool = require('pg').Pool
 
 const credentials = {
@@ -71,20 +72,41 @@ const loginHandler = function (req, res, next) {
                 message: 'Invalid credentials'
             });
         }
-        req.session.userId = user.id;
-
-        delete user.password;
-        res.status(200).json({
-            success: true,
-            message: 'Login successful',
-            user: user
+        const jwtSecret = process.env.JWT_SECRET_KEY;
+        let data = {
+            sub: user.id,
+            iat: new Date().getTime()
+        };
+        jwt.sign(data,
+            jwtSecret,
+            { expiresIn: '1d' },
+            (err, token) => {
+            if (err) {
+                return res.status(500).json({
+                    success: false,
+                    message: 'Error generating token',
+                    error: err
+                });
+            }
+            req.session.userId = user.id;
+            delete user.password;
+            return res.cookie('Authorization', 'Bearer ' + token)
+                .status(200).json({
+                    success: true,
+                    message: 'Login successful',
+                    user: user,
+                    token: token
+                });
         });
+
     });
 };
 
 const logoutHandler = function (req, res, next) {
     req.session.destroy();
     res.status(200).clearCookie('connect.sid', {
+        path: '/'
+    }).clearCookie('Authorization', {
         path: '/'
     }).json({
         success: true,
@@ -121,18 +143,39 @@ const signUpHandler = function (req, res, next) {
 }
 
 const currentUserHandler = function (req, res, next) {
-    if (!req.session.userId) {
+    const cookies = req.cookies;
+
+    const authHeader = cookies['Authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    if (token == null) {
         return res.status(401).json({
             success: false,
-            message: 'Unauthorized'
+            message: 'No token found! Unauthorized'
         });
     }
-    findUserById(req.session.userId).then((user) => {
-        delete user.password;
-        res.status(200).json({
-            success: true,
-            message: 'Current user',
-            user: user
+
+    jwt.verify(token, process.env.JWT_SECRET_KEY, null, (err, payload) => {
+        if (err) {
+            return res.status(403).json({
+                success: false,
+                message: 'Forbidden'
+            });
+        }
+
+        const userId = payload.sub;
+        findUserById(userId).then((user) => {
+            if (!user) {
+                return res.status(401).json({
+                    success: false,
+                    message: 'Unauthorized'
+                });
+            }
+            delete user.password;
+            res.status(200).json({
+                success: true,
+                message: 'Current user',
+                user: user
+            });
         });
     });
 };

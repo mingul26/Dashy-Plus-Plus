@@ -10,20 +10,52 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: postgres
     ports:
-      - '5432:5432'
+      - '54321:5432'
   auth_server:
     build: auth_service
     container_name: authServer
     command: npm run dev:watch
     ports:
-      - 3000:3000
+      - '30001:3000'
     volumes:
       - ./auth_service:/src/
-      - nodemodules:/src/node_modules
     links:
       - authDB
     depends_on:
       - authDB
-
+  dashboardDB:
+    image: postgres
+    container_name: dashboardDB
+    restart: unless-stopped
+    environment:
+      POSTGRES_ROOT_USER: root
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: dashboard
+    ports:
+      - '54322:5432'
+  dashboard_server:
+    build: dashboard_service
+    container_name: dashboardServer
+    command: npm run dev:watch
+    ports:
+      - '30002:3000'
+    volumes:
+      - ./dashboard_service:/src/
+    links:
+      - dashboardDB
+    depends_on:
+      - dashboardDB
+  server:
+    image: nginx
+    container_name: server
+    restart: unless-stopped
+    ports:
+      - '8080:80'
+    depends_on:
+      - auth_server
+      - dashboard_server
+    volumes:
+      - ./server/nginx.conf:/etc/nginx/conf.d/default.conf
 volumes:
   nodemodules: {}
