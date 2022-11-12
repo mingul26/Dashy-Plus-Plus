@@ -27,11 +27,20 @@ SQL Schema is available [here](./bin/schema.sql) to create different tables.
 
         cd Dashy-Plus-Plus
 
-3.  Run the following command to start the server
+3.  Install _node dependencies_ in each service
+
+        cd auth_service
+        npm i
+        cd ..
+        cd dashboard_service
+        npm i
+        cd ..
+
+4.  Run the following command to start the server
 
         docker-compose up
 
-4.  Wait for the containers to start and the server to be alive
-5.  Visit this [link](https://documenter.getpostman.com/view/21938946/2s8YespWi2) for the documentation
-6.  Click **Run in Postman**
-7.  To stop the server, press `Ctrl+C` in the terminal
+5.  Wait for the containers to start and the server to be alive
+6.  Visit this [link](https://documenter.getpostman.com/view/21938946/2s8YespWi2) for the documentation
+7.  Click **Run in Postman**
+8.  To stop the server, press `Ctrl+C` in the terminal
