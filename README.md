@@ -16,6 +16,7 @@ SQL Schema is available [here](./bin/schema.sql) to create different tables.
 - [Docker](https://docs.docker.com/install/)
 - [Docker Compose](https://docs.docker.com/compose/install/)
 - Postman
+- NodeJS
 
 ### Setup
 
