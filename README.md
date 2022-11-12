@@ -1,4 +1,13 @@
-generate readme for docker-compose setup
+# Dashy Plus Plus
+
+## Microservice Architecture Diagram
+
+<img src="bin/diagram.jpg">
+<hr>
+
+## Schema
+
+SQL Schema is available [here](./bin/schema.sql) to create different tables.
 
 ## Setup
 
@@ -6,6 +15,7 @@ generate readme for docker-compose setup
 
 - [Docker](https://docs.docker.com/install/)
 - [Docker Compose](https://docs.docker.com/compose/install/)
+- Postman
 
 ### Setup
 
@@ -21,5 +31,7 @@ generate readme for docker-compose setup
 
         docker-compose up
 
-4.  Open [http://localhost:8080](http://localhost:8080) in your browser
-5.  To stop the server, press `Ctrl+C` in the terminal
+4.  Wait for the containers to start and the server to be alive
+5.  Visit this [link](https://documenter.getpostman.com/view/21938946/2s8YespWi2) for the documentation
+6.  Click **Run in Postman**
+7.  To stop the server, press `Ctrl+C` in the terminal
